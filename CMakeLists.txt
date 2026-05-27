@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.24)
 
 set(CMAKE_CXX_STANDARD 20)
-project(INSERT_PLUGIN_NAME VERSION 0.0.1)
+project(PowerMachine VERSION 0.1.0)
 
 add_subdirectory("C:/JUCE" JUCE)
 
@@ -11,8 +11,20 @@ set(SourceFiles
         "${CMAKE_CURRENT_SOURCE_DIR}/source/PluginEditor.h"
         "${CMAKE_CURRENT_SOURCE_DIR}/source/PluginProcessor.cpp"
         "${CMAKE_CURRENT_SOURCE_DIR}/source/PluginProcessor.h"
+        "${CMAKE_CURRENT_SOURCE_DIR}/source/dsp/AutoGainCompensation.cpp"
+        "${CMAKE_CURRENT_SOURCE_DIR}/source/dsp/AutoGainCompensation.h"
+        "${CMAKE_CURRENT_SOURCE_DIR}/source/dsp/MultiStageSaturator.cpp"
+        "${CMAKE_CURRENT_SOURCE_DIR}/source/dsp/MultiStageSaturator.h"
+        "${CMAKE_CURRENT_SOURCE_DIR}/source/dsp/OversamplingProcessor.cpp"
+        "${CMAKE_CURRENT_SOURCE_DIR}/source/dsp/OversamplingProcessor.h"
         "${CMAKE_CURRENT_SOURCE_DIR}/source/dsp/PluginDSP.cpp"
         "${CMAKE_CURRENT_SOURCE_DIR}/source/dsp/PluginDSP.h"
+        "${CMAKE_CURRENT_SOURCE_DIR}/source/dsp/SaturationStage.cpp"
+        "${CMAKE_CURRENT_SOURCE_DIR}/source/dsp/SaturationStage.h"
+        "${CMAKE_CURRENT_SOURCE_DIR}/source/dsp/SoftClipper.cpp"
+        "${CMAKE_CURRENT_SOURCE_DIR}/source/dsp/SoftClipper.h"
+        "${CMAKE_CURRENT_SOURCE_DIR}/source/dsp/ToneShaper.cpp"
+        "${CMAKE_CURRENT_SOURCE_DIR}/source/dsp/ToneShaper.h"
         "${CMAKE_CURRENT_SOURCE_DIR}/source/parameters/ParameterIDs.h"
         "${CMAKE_CURRENT_SOURCE_DIR}/source/parameters/ParameterLayout.cpp"
         "${CMAKE_CURRENT_SOURCE_DIR}/source/parameters/ParameterLayout.h"
@@ -37,11 +49,11 @@ juce_add_plugin(${PROJECT_NAME}
           IS_MIDI_EFFECT FALSE                        # Is this plugin a MIDI effect?
           EDITOR_WANTS_KEYBOARD_FOCUS FALSE           # Does the editor need keyboard focus?
           COPY_PLUGIN_AFTER_BUILD FALSE              # Should the plugin be installed to a default location after building?
-          PLUGIN_MANUFACTURER_CODE Juce               # A four-character manufacturer id with at least one upper-case character
-          PLUGIN_CODE Dem0                            # A unique four-character plugin id with exactly one upper-case character
+          PLUGIN_MANUFACTURER_CODE Sama               # A four-character manufacturer id with at least one upper-case character
+          PLUGIN_CODE PowM                            # A unique four-character plugin id with exactly one upper-case character
                                                       # GarageBand 10.3 requires the first letter to be upper-case, and the remaining letters to be lower-case
           FORMATS VST3 Standalone                     # The formats to build. Other valid formats are: AAX Unity VST AU AUv3
-          PRODUCT_NAME "INSERT_PLUGIN_NAME")                 # The name of the final executable, which can differ from the target name
+          PRODUCT_NAME "Power Machine")                 # The name of the final executable, which can differ from the target name
 
 
 

@@ -2,6 +2,8 @@
 
 #include <juce_audio_processors/juce_audio_processors.h>
 
+#include <atomic>
+
 #include "dsp/PluginDSP.h"
 #include "parameters/ParameterLayout.h"
 
@@ -48,9 +50,18 @@ public:
 
     juce::AudioProcessorValueTreeState parameters;
 
+    float getInputMeterLevel() const noexcept { return inputMeterLevel.load(); }
+    float getOutputMeterLevel() const noexcept { return outputMeterLevel.load(); }
+    float getSaturationMeterLevel() const noexcept { return saturationMeterLevel.load(); }
+
 private:
     //==============================================================================
+    PluginDSP::Settings readSettings() const;
+
     PluginDSP dsp;
+    std::atomic<float> inputMeterLevel { 0.0f };
+    std::atomic<float> outputMeterLevel { 0.0f };
+    std::atomic<float> saturationMeterLevel { 0.0f };
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AudioPluginAudioProcessor)
 };

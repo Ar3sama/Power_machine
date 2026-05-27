@@ -90,7 +90,6 @@ void AudioPluginAudioProcessor::changeProgramName (int index, const juce::String
 //==============================================================================
 void AudioPluginAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
-    //TODO : Prepare the ressources in the DSP file 
     dsp.prepare (sampleRate, samplesPerBlock, getTotalNumOutputChannels());
 }
 
@@ -140,9 +139,43 @@ void AudioPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
     const auto bypass = parameters.getRawParameterValue (ParameterIDs::bypass)->load() > 0.5f;
 
     if (bypass)
+    {
+        inputMeterLevel.store (0.0f);
+        outputMeterLevel.store (0.0f);
+        saturationMeterLevel.store (0.0f);
         return;
+    }
 
-    dsp.processBlock (buffer);
+    dsp.processBlock (buffer, readSettings());
+
+    inputMeterLevel.store (dsp.getLastInputLevel());
+    outputMeterLevel.store (dsp.getLastOutputLevel());
+    saturationMeterLevel.store (dsp.getLastSaturationAmount());
+}
+
+PluginDSP::Settings AudioPluginAudioProcessor::readSettings() const
+{
+    PluginDSP::Settings settings;
+
+    settings.inputDriveDb = parameters.getRawParameterValue (ParameterIDs::inputDrive)->load();
+    settings.stage1Drive = parameters.getRawParameterValue (ParameterIDs::stage1Drive)->load() / 100.0f;
+    settings.stage2Drive = parameters.getRawParameterValue (ParameterIDs::stage2Drive)->load() / 100.0f;
+    settings.tone = parameters.getRawParameterValue (ParameterIDs::tone)->load() / 100.0f;
+    settings.presence = parameters.getRawParameterValue (ParameterIDs::presence)->load() / 100.0f;
+    settings.mix = parameters.getRawParameterValue (ParameterIDs::mix)->load() / 100.0f;
+    settings.outputGainDb = parameters.getRawParameterValue (ParameterIDs::outputGain)->load();
+    settings.analogCharacter = parameters.getRawParameterValue (ParameterIDs::analogCharacter)->load() / 100.0f;
+    settings.autoGainEnabled = parameters.getRawParameterValue (ParameterIDs::autoGain)->load() > 0.5f;
+
+    switch (static_cast<int> (parameters.getRawParameterValue (ParameterIDs::oversampling)->load()))
+    {
+        case 1: settings.oversamplingMode = OversamplingProcessor::Mode::x2; break;
+        case 2: settings.oversamplingMode = OversamplingProcessor::Mode::x4; break;
+        case 3: settings.oversamplingMode = OversamplingProcessor::Mode::x8; break;
+        default: settings.oversamplingMode = OversamplingProcessor::Mode::off; break;
+    }
+
+    return settings;
 }
 
 //==============================================================================
